@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Cards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-100">
+<div id="root"></div>
+
+<script type="text/babel">
+const App = () => {
+  const [products, setProducts] = React.useState([
+    {id:1,name:"Smartwatch",price:"₹2,999",img:"https://via.placeholder.com/150"},
+    {id:2,name:"Smartphone",price:"₹15,999",img:"https://via.placeholder.com/150"},
+    {id:3,name:"Headphones",price:"₹1,499",img:"https://via.placeholder.com/150"},
+  ]);
+  const [name,setName]=React.useState(""),[price,setPrice]=React.useState(""),[img,setImg]=React.useState("");
+
+  const addProduct = () => {
+    if(!name||!price)return alert("Enter name & price");
+    setProducts([...products,{id:Date.now(),name,price,img:img||"https://via.placeholder.com/150"}]);
+    setName(""); setPrice(""); setImg("");
+  };
+  const deleteProduct = id => setProducts(products.filter(p=>p.id!==id));
+
+  return (
+    <div className="min-h-screen flex flex-col items-center p-6">
+      <h1 className="text-3xl font-bold mb-6">Product List</h1>
+
+      {/* Add Product Form */}
+      <div className="bg-white p-4 rounded-2xl shadow mb-6 w-full max-w-md flex flex-col gap-2">
+        <input placeholder="Name" value={name} onChange={e=>setName(e.target.value)} className="border p-2 rounded"/>
+        <input placeholder="Price" value={price} onChange={e=>setPrice(e.target.value)} className="border p-2 rounded"/>
+        <input placeholder="Image URL" value={img} onChange={e=>setImg(e.target.value)} className="border p-2 rounded"/>
+        <button onClick={addProduct} className="bg-green-600 text-white py-2 rounded-xl hover:bg-green-700">Add Product</button>
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-5xl">
+        {products.map(p=>(
+          <div key={p.id} className="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition relative">
+            <img src={p.img} alt={p.name} className="w-full h-40 object-cover rounded-lg"/>
+            <h2 className="text-xl font-semibold mt-3">{p.name}</h2>
+            <p className="text-gray-600">{p.price}</p>
+            <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700">Add to Cart</button>
+            <button onClick={()=>deleteProduct(p.id)} className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 text-sm">X</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
